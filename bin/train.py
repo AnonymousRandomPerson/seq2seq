@@ -216,7 +216,7 @@ def create_experiment(output_dir):
   return experiment
 
 
-def main(_argv):
+def main(_argv, config_paths = ""):
   """The entrypoint for the script"""
 
   # Parse YAML FLAGS
@@ -229,7 +229,9 @@ def main(_argv):
   # Load flags from config file
   final_config = {}
   if FLAGS.config_paths:
-    for config_path in FLAGS.config_paths.split(","):
+    config_paths += "," + FLAGS.config_paths
+  if config_paths:
+    for config_path in config_paths.split(","):
       config_path = config_path.strip()
       if not config_path:
         continue

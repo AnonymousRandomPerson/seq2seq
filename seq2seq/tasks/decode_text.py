@@ -30,6 +30,7 @@ from tensorflow import gfile
 
 from seq2seq.tasks.inference_task import InferenceTask, unbatch_dict
 
+from utils.file_access import TEST_OUTPUT_FILE
 
 def _get_prediction_length(predictions_dict):
   """Returns the length of the prediction based on the index
@@ -186,3 +187,5 @@ class DecodeText(InferenceTask):
       sent = sent.strip()
 
       print(sent)
+      with open(TEST_OUTPUT_FILE, 'a') as output_file:
+        output_file.write(sent + '\n')

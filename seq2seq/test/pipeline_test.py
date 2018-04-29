@@ -33,6 +33,7 @@ import tensorflow as tf
 from tensorflow import gfile
 
 from seq2seq.test import utils as test_utils
+from absl import flags as absl_flags
 
 BIN_FOLDER = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "../../bin"))
@@ -41,7 +42,9 @@ BIN_FOLDER = os.path.abspath(
 def _clear_flags():
   """Resets Tensorflow's FLAG values"""
   #pylint: disable=W0212
-  tf.app.flags.FLAGS = tf.app.flags._FlagValues()
+  flag_values_wrapper = tf.app.flags.FLAGS.__dict__['__wrapped']
+  flag_values = flag_values_wrapper._flags().copy()
+  flag_values_wrapper.remove_flag_values(flag_values)
   tf.app.flags._global_parser = argparse.ArgumentParser()
 
 

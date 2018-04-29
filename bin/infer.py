@@ -56,13 +56,15 @@ tf.flags.DEFINE_integer("batch_size", 32, "the train/dev batch size")
 
 FLAGS = tf.flags.FLAGS
 
-def main(_argv):
+def main(_argv, config_path = None):
   """Program entry point.
   """
 
   # Load flags from config file
   if FLAGS.config_path:
-    with gfile.GFile(FLAGS.config_path) as config_file:
+    config_path = FLAGS.config_path
+  if config_path:
+    with gfile.GFile(config_path) as config_file:
       config_flags = yaml.load(config_file)
       for flag_key, flag_value in config_flags.items():
         setattr(FLAGS, flag_key, flag_value)
@@ -95,7 +97,7 @@ def main(_argv):
   for tdict in FLAGS.tasks:
     if not "params" in tdict:
       tdict["params"] = {}
-    task_cls = locate(tdict["class"]) or getattr(tasks, tdict["class"])
+    task_cls = getattr(tasks, tdict["class"])
     task = task_cls(tdict["params"])
     hooks.append(task)
 
