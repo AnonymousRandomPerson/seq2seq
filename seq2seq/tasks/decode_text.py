@@ -185,6 +185,7 @@ class DecodeText(InferenceTask):
         sent = self._postproc_fn(sent)
 
       sent = sent.strip()
+      sent = sent.replace('@@ ', '')
 
       print(sent)
       with open(TEST_OUTPUT_FILE, 'a') as output_file:
