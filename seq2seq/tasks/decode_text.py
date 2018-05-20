@@ -22,6 +22,7 @@ from __future__ import unicode_literals
 
 import functools
 from pydoc import locate
+from typing import List
 
 import numpy as np
 
@@ -177,16 +178,29 @@ class DecodeText(InferenceTask):
             predicted_tokens=predicted_tokens,
             attention_scores=attention_scores)
 
-      sent = self.params["delimiter"].join(predicted_tokens).split(
-          "SEQUENCE_END")[0]
+      sent = self.extract_sentence(predicted_tokens)
+      prompt = self.extract_sentence(source_tokens)
 
-      # Apply postproc
-      if self._postproc_fn:
-        sent = self._postproc_fn(sent)
-
-      sent = sent.strip()
-      sent = sent.replace('@@ ', '')
-
-      print(sent)
+      print(prompt + '\n' + sent + '\n\n')
       with open(TEST_OUTPUT_FILE, 'a') as output_file:
         output_file.write(sent + '\n')
+
+  def extract_sentence(self, tokens: List[str]) -> str:
+    """
+    Extracts a human-language sentence from a list of BPE tokens.
+
+    Args:
+      tokens: A list of BPE tokens to transform into a sentence.
+
+    Returns:
+      A human-language sentence from the tokens.
+    """
+    sent = self.params["delimiter"].join(tokens).split("SEQUENCE_END")[0]
+
+    # Apply postproc
+    if self._postproc_fn:
+      sent = self._postproc_fn(sent)
+
+    sent = sent.strip()
+    sent = sent.replace('@@ ', '')
+    return sent

@@ -44,7 +44,7 @@ sub add_to_ref {
     my $s=0;
     if ($file =~ /.gz$/) {
 	open(REF,"gzip -dc $file|") or die "Can't read $file";
-    } else { 
+    } else {
 	open(REF,$file) or die "Can't read $file";
     }
     while(<REF>) {
@@ -145,7 +145,7 @@ for(my $n=1;$n<=4;$n++) {
   }
 }
 
-if ($length_reference==0){
+if ($length_reference==0 || $length_translation == 0){
   printf "BLEU = 0, 0/0/0/0 (BP=0, ratio=0, hyp_len=0, ref_len=0)\n";
   exit(1);
 }
